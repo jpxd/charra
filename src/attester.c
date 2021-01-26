@@ -216,8 +216,8 @@ static void coap_attestation_handler(struct coap_context_t* ctx UNUSED,
 		.attestation_data_len = attest_buf->size,
 		.attestation_data = {0}, // must be memcpy'd, see below
 		.tpm2_signature_len = sizeof(*signature),
-		.tpm2_signature = {0}
-		.tpm2_public_key_len = sizeof(*public_key);
+		.tpm2_signature = {0},
+		.tpm2_public_key_len = sizeof(*public_key),
 		.tpm2_public_key = {0}}; // must be memcpy'd, see below
 	memcpy(res.attestation_data, attest_buf->attestationData,
 		res.attestation_data_len);
