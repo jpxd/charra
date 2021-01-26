@@ -10,11 +10,11 @@
 
 ## sanity check -- list all required tools here
 read -r -d '' tool_reqs <<- EOM
-/usr/bin/dirname
-/usr/bin/docker
+dirname
+docker
 EOM
 while read tool; do
-	if [ ! -x "$tool" ]; then
+	if [ ! -x "$(command -v $tool)" ]; then
 		## print error using the shell builtin echo command
 		echo "Required tool '${tool}' not found or not executable!" >&2
 		exit 2
@@ -27,7 +27,7 @@ done < <(echo "$tool_reqs")
 # ---------------------------------------------------------------------------#
 
 ## change directory to the one this script is placed in
-cd "$(/usr/bin/dirname "$0")"
+cd "$(dirname "$0")"
 
 ## go up one directory
 cd ../
@@ -54,14 +54,14 @@ done
 docker_image_fullname="${DOCKER_IMAGE_VENDOR}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}"
 
 ## check whether Docker image exists
-image_exists="$(/usr/bin/docker images -q "${docker_image_fullname}" 2> /dev/null)"
+image_exists="$(docker images -q "${docker_image_fullname}" 2> /dev/null)"
 if [ -z "${image_exists}" ]; then
 	echo "ERROR: Docker image '${docker_image_fullname}' does not exist."
 	exit 1
 fi
 
 ## run (transient) Docker container
-/usr/bin/docker run --rm -it \
+docker run --rm -it \
 	-v "${PWD}/:/home/bob/charra" \
 	"${docker_image_fullname}" \
 	"$@"

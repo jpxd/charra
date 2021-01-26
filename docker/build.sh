@@ -10,13 +10,13 @@
 
 ## sanity check -- list all required tools here
 read -r -d '' tool_reqs <<- EOM
-/usr/bin/dirname
-/usr/bin/docker
-/usr/bin/id
-/usr/bin/whoami
+dirname
+docker
+id
+whoami
 EOM
 while read tool; do
-	if [ ! -x "$tool" ]; then
+	if [ ! -x "$(command -v $tool)" ]; then
 		## print error using the shell builtin echo command
 		echo "Required tool '${tool}' not found or not executable!" >&2
 		exit 2
@@ -29,7 +29,7 @@ done < <(echo "$tool_reqs")
 # ---------------------------------------------------------------------------#
 
 ## change directory to the one this script is placed in
-cd "$(/usr/bin/dirname "$0")"
+cd "$(dirname "$0")"
 
 ## go up one directory
 cd ../
@@ -56,12 +56,12 @@ done
 docker_image_fullname="${DOCKER_IMAGE_VENDOR}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_VERSION}"
 
 ## set variables
-container_user="$(/usr/bin/whoami)"
-container_uid="$(/usr/bin/id -u)"
-container_gid="$(/usr/bin/id -g)"
+container_user="$(whoami)"
+container_uid="$(id -u)"
+container_gid="$(id -g)"
 
 ## build container
-/usr/bin/docker build \
+docker build \
 	`#--build-arg "user=${container_user}"` \
 	--build-arg "uid=${container_uid}" \
 	--build-arg "gid=${container_gid}" \
