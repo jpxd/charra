@@ -105,7 +105,6 @@ ARG gid=1000
 
 ## create non-root user and grant sudo permission
 RUN export user="$user" uid="$uid" gid="$gid" \
-	&& addgroup --gid "$gid" "$user" \
 	&& adduser --home /home/"$user" --uid "$uid" --gid "$gid" \
 	--disabled-password --gecos '' "$user" \
 	&& mkdir -vp /etc/sudoers.d/ \
