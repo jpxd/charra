@@ -48,12 +48,12 @@
 /* logging */
 #define LOG_NAME "verifier"
 // #define LOG_LEVEL_CBOR LOG_DEBUG
-#define LOG_LEVEL_CHARRA CHARRA_LOG_DEBUG
+#define LOG_LEVEL_CHARRA CHARRA_LOG_INFO
 // #define LOG_LEVEL_CHARRA CHARRA_LOG_DEBUG
 
 /* config */
+#define RXTXBUFSIZE 4*1024
 #define PORT 5000
-#define RXTXBUFSIZE 20480
 #define CBOR_ENCODER_BUFFER_LENGTH 20480   // 20 KiB should be sufficient
 #define TPM_SIG_KEY_ID_LEN 14
 #define TPM_SIG_KEY_ID "PK.RSA.default"
@@ -66,13 +66,11 @@ static CHARRA_RC create_attestation_request(msg_attestation_request_dto* attesta
 
 /* --- main --------------------------------------------------------------- */
 
-
 void handle_connection(int sock) {
 	CHARRA_RC charra_r = CHARRA_RC_SUCCESS;
 	CHARRA_RC charra_err = CHARRA_RC_SUCCESS;
 	TSS2_RC tss_r = 0;
-
-	uint8_t* rxtx_buf = calloc(0, RXTXBUFSIZE);
+	uint8_t rxtx_buf[RXTXBUFSIZE];
 	charra_log_info("[" LOG_NAME "] Starting up.");
 
 	/* create attestation request */
@@ -274,9 +272,6 @@ error:
 	if (esys_ctx != NULL) {
 		Esys_Finalize(&esys_ctx);
 	}
-
-	/* free memory */
-	free(rxtx_buf);
 }
 
 
